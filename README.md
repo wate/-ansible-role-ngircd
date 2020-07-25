@@ -1,7 +1,7 @@
 ngircd
 =========
 
-A brief description of the role goes here.
+ngIRCのインストールとセットアップを行います
 
 Requirements
 ------------
@@ -11,12 +11,17 @@ Any pre-requisites that may not be covered by Ansible itself or the role should 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### ngircd_global_cfg
 
-Dependencies
-------------
+ngIRCの全般設定を指定します
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+```yml
+ngircd_global_cfg:
+  name: c.example.net
+  info: Server Info Text
+  listen: 127.0.0.1
+```
+
 
 Example Playbook
 ----------------
@@ -24,7 +29,7 @@ Example Playbook
 ```yml
 - hosts: servers
   roles:
-     - { role: ngircd }
+     - role: ngircd
 ```
 
 License

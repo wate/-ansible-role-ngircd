@@ -25,7 +25,7 @@
 
 	# Server name in the IRC network, must contain at least one dot
 	# (".") and be unique in the IRC network. Required!
-	;Name = irc.example.net
+	Name = {{ ngircd_global_cfg.name }}
 
 	# Information about the server and the administrator, used by the
 	# ADMIN command. Not required by server but by RFC!
@@ -39,19 +39,19 @@
 
 	# Info text of the server. This will be shown by WHOIS and
 	# LINKS requests for example.
-	;Info = Server Info Text
+	Info = {{ ngircd_global_cfg.info }}
 
 	# Comma separated list of IP addresses on which the server should
 	# listen. Default values are:
 	# "0.0.0.0" or (if compiled with IPv6 support) "::,0.0.0.0"
 	# so the server listens on all IP addresses of the system by default.
-	;Listen = 127.0.0.1
+	Listen = {{ ngircd_global_cfg.listen }}
 
 	# Text file with the "message of the day" (MOTD). This message will
 	# be shown to all users connecting to the server:
 	;MotdFile = /etc/ngircd.motd
 
-	# A simple Phrase (<256 chars) if you don't want to use a motd file.
+	# A simple Phrase (<127 chars) if you don't want to use a motd file.
 	;MotdPhrase = "Hello world!"
 
 	# The name of the IRC network to which this server belongs. This name
@@ -116,6 +116,12 @@
 	# Please note that all servers in an IRC network MUST use the same
 	# maximum nickname length!
 	;MaxNickLength = 9
+
+	# Maximum penalty time increase in seconds, per penalty event. Set to -1
+	# for no limit (the default), 0 to disable penalties altogether. The
+	# daemon doesn't use penalty increases higher than 2 seconds during
+	# normal operation, so values greater than 1 rarely make sense.
+	;MaxPenaltyTime = -1
 
 	# Maximum number of channels returned in response to a /list
 	# command (0: unlimited):
@@ -226,6 +232,15 @@
 	# character prepended to their respective user names!
 	;PAMIsOptional = no
 
+	# When PAM is enabled, this value determines the used PAM
+	# configuration.
+	# This setting allows to run multiple ngIRCd instances with
+	# different PAM configurations on each instance.
+	# If you set it to "ngircd-foo", PAM will use
+	# /etc/pam.d/ngircd-foo instead of the default
+	# /etc/pam.d/ngircd.
+	;PAMServiceName = ngircd
+
 	# Let ngIRCd send an "authentication PING" when a new client connects,
 	# and register this client only after receiving the corresponding
 	# "PONG" reply.
@@ -262,6 +277,8 @@
 	;CipherList = HIGH:!aNULL:@STRENGTH:!SSLv3
 	# For GnuTLS:
 	;CipherList = SECURE128:-VERS-SSL3.0
+ 	# Set the default to use Fedora's site wide crypto policy.
+ 	CipherList = @SYSTEM
 
 	# Diffie-Hellman parameters
 	;DHFile = /etc/ssl/dhparams.pem
@@ -294,7 +311,7 @@
 [Server]
 	# Other servers are configured in [Server] sections. If you
 	# configure a port for the connection, then this ngircd tries to
-	# connect to to the other server on the given port; if not it waits
+	# connect to the other server on the given port; if not it waits
 	# for the other server to connect.
 	# There may be more than one server block, one for each server.
 	#
@@ -370,18 +387,15 @@
 	# Topic for this channel
 	;Topic = a great topic
 
-	# Initial channel modes
-	;Modes = tnk
-
-	# initial channel password (mode k)
-	;Key = Secret
+	# Initial channel modes, as used in "MODE" commands. Modifying lists
+	# (ban list, invite list, exception list) is supported.
+	# This option can be specified multiple times, evaluated top to bottom.
+	;Modes = +tnk mykey +l 5
+	;Modes = +b nick!~user@bad.host.example.com
 
 	# Key file, syntax for each line: "<user>:<nick>:<key>".
 	# Default: none.
 	;KeyFile = /etc/#chan.key
-
-	# maximum users per channel (mode l)
-	;MaxUsers = 23
 
 [Channel]
 	# More [Channel] sections, if you like ...

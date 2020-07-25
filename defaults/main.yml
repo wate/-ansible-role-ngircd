@@ -1,1 +1,5 @@
 ---
+ngircd_global_cfg:
+  name: irc.example.net
+  info: Server Info Text
+  listen: 127.0.0.1

@@ -16,10 +16,13 @@
   systemd:
     name: ngircd
     state: started
-    enabled: yes
-- name: allow IRC port
-  firewalld:
-    port: 6667/tcp
-    permanent: yes
-    state: enabled
-  notify: restart firewalld
+    enabled: true
+# - name: install firewalld
+#   yum:
+#     name: firewalld
+# - name: allow IRC port
+#   firewalld:
+#     port: 6667/tcp
+#     permanent: true
+#     state: enabled
+#   notify: restart firewalld
